@@ -1,7 +1,11 @@
+html {
+    height: 100%;
+}
 body {
     margin: 0;
     padding: 0;
     background: #e5e5e5;
+    height:100%;
 }
 #main-wrapper {
     width:100%; height:100%;
@@ -56,19 +60,15 @@ body {
     margin: 10px 10px;
     border-radius: 3px;
     overflow: hidden;
+    background-color: #ff1927;
 }
-.machine-speed-factor {
+.machine-info {
     text-align: right;
     font-weight: bold;
     padding: 5px;
     color: white;
     position: relative;
 }
-.speed-factor-color-1 { background-color: #ff1927; }
-.speed-factor-color-2 { background-color: #e51623; }
-.speed-factor-color-3 { background-color: #cc141f; }
-.speed-factor-color-4 { background-color: #b2111b; }
-.speed-factor-color-5 { background-color: #990f17; }
 
 .product {
     width: 100%;
