@@ -1,0 +1,23 @@
+{
+  "name": "scr_piwowar_czekaj_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/piwpio/SCR_Piwowar_Czekaj_project.git"
+  },
+  "author": "Piwowar Czekaj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piwpio/SCR_Piwowar_Czekaj_project/issues"
+  },
+  "homepage": "https://github.com/piwpio/SCR_Piwowar_Czekaj_project#readme"
+}
