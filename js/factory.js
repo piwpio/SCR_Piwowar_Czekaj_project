@@ -1,24 +1,24 @@
-let Factory = function(productsPriorities) {
-  let _machinesNumber = navigator.hardwareConcurrency;
-  let _productsPriorities = productsPriorities ? [...new Set(productsPriorities)] : [1,2,3];
+const Factory = function(productsPriorities) {
+  const _machinesNumber = navigator.hardwareConcurrency;
+  const _productsPriorities = productsPriorities ? [...new Set(productsPriorities)] : [1,2,3];
 
-  let _machines = [];
-  let _queue = new FactoryQueue();
-  let _$factory = document.getElementById("factory-machines");
-  let _$factoryCreateButtons = document.getElementById("factory-create-buttons");
+  const _machines = [];
+  const _queue = new FactoryQueue();
+  const _$factory = document.getElementById("factory-machines");
+  const _$factoryCreateButtons = document.getElementById("factory-create-buttons");
 
   const factoryConsole = new FactoryConsole();
 
-  let init = () => {
+  const init = () => {
     _createMachines();
     _createProductButtons();
   }
 
-  let machineDoneNotificator = () => {
+  const machineDoneNotificator = () => {
     _getFromQueue();
   }
 
-  let _createMachines = () => {
+  const _createMachines = () => {
     [...Array(_machinesNumber).keys()].forEach( (id) => {
       const machine = new Machine(id, machineDoneNotificator);
       _$factory.appendChild(machine.$getMachine());
@@ -26,42 +26,45 @@ let Factory = function(productsPriorities) {
     });
   }
 
-  let _createProductButtons = () => {
+  const _createProductButtons = () => {
     _productsPriorities.forEach( priority => {
       const $button = document.createElement("button");
-      $button.innerHTML  = 'Create PRIO ' + priority;
+      $button.innerHTML  = 'Create PRIORITY ' + priority;
       $button.className  = 'product-button';
       $button.onclick = _requestProduct.bind(this, priority);
       _$factoryCreateButtons.appendChild($button);
     });
   }
 
-  let _requestProduct = (priority) => {
+  const _requestProduct = (priority) => {
     const product = new Product(priority);
     let machine = _getFirstFreeMachine();
     if (!machine) {
       machine = _getLowerPriorityBusyMachine(priority);
       if (machine) {
+        machine.terminateProduction();
         _addToQueue(machine.getProducedProduct());
       }
     }
     machine ? _product(machine, product) : _addToQueue(product);
   }
 
-  let _addToQueue = (product) => {
+  const _addToQueue = (product) => {
     _queue.addToQueue(product);
   }
 
-  let _getFromQueue = () => {
+  const _getFromQueue = () => {
     const product = _queue.getFromQueue();
     if (product) {
       _product(_getFirstFreeMachine(), product);
+    } else if (_isFactoryProducing()) {
+      // factoryConsole.write('!!! EMPTY QUEUE !!!');
     } else {
-      factoryConsole.write('!!! FACTORY IDLE !!!');
+      factoryConsole.write('!!! EMPTY QUEUE, FACTORY IDLE !!!');
     }
   }
 
-  let _product = (freeMachine, product) => {
+  const _product = (freeMachine, product) => {
     freeMachine.product(product);
   }
 
@@ -73,10 +76,15 @@ let Factory = function(productsPriorities) {
     return filtered.length ? filtered[0] : null;
   }
 
-  let _getFirstFreeMachine = () => _machines.find( machine => !machine.isBusy());
+  const _getFirstFreeMachine = () => _machines.find( machine => !machine.isBusy());
+
+  const _isFactoryProducing = () => _machines.some(machine => machine.isBusy());
 
   _getFromQueue();
   return {
-    init: init
+    init: init,
+    getMachines: () => _machines,
+    getQueue: () => _queue,
+    getConsole: () => factoryConsole
   };
 }

@@ -1,12 +1,12 @@
-let Product = function(priority, productTime, name) {
-  let _priority = priority || 1;
-  let _productTime = productTime ? productTime * _priority : DEFAULT_PRODUCT_TIME;
-  let _name = name || 'product priority' + _priority;
-  let _$product = document.createElement("div");
+const Product = function(priority, productTime, name) {
+  const _priority = priority || 1;
+  const _productTime = productTime ? productTime * _priority : DEFAULT_PRODUCT_TIME;
+  const _name = name || 'product priority' + _priority;
+  const _$product = document.createElement("div");
 
-  let _init = () => {
+  const _init = () => {
     _$product.className = 'product priority-color-' + _priority;
-    _$product.innerHTML = 'PRIO ' + _priority;
+    _$product.innerHTML = 'PRIORITY ' + _priority;
   }
 
   _init();

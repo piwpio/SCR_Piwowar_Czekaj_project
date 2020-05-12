@@ -8,26 +8,10 @@ let Machine = function(machineIndex, machineDoneNotificator) {
 
   const factoryConsole = new FactoryConsole();
 
-  let _init = () => {
+  const _init = () => {
     _$machine.className = 'machine';
     _$machineInfo.className = 'machine-info';
     _$machineInfo.innerHTML = 'MID: ' + machineIndex;
-  }
-
-  let _render = (product) => {
-    _$machine.innerHTML = '';
-    if (product) {
-      _$machine.appendChild(product.$getProduct());
-    }
-    _$machine.appendChild(_$machineInfo);
-  }
-
-  let product = (product) => {
-    _render(product);
-    _state = 1;
-    _producedProduct = product;
-    factoryConsole.write('MACHINE ' + machineIndex + ' start PRIO ' + product.getPriority());
-    _worker.postMessage({priority: product.getPriority()});
   }
 
   const _initWorker = () => {
@@ -35,9 +19,29 @@ let Machine = function(machineIndex, machineDoneNotificator) {
       _state = 0;
       _producedProduct = null;
       _render();
-      factoryConsole.write('MACHINE ' + machineIndex + ' finish PRIO ' + e.data.priority);
+      factoryConsole.write('MACHINE ' + machineIndex + ' finish PRIORITY ' + e.data.priority);
       machineDoneNotificator();
     };
+  }
+
+  const _render = (product) => {
+    _$machine.innerHTML = '';
+    if (product) {
+      _$machine.appendChild(product.$getProduct());
+    }
+    _$machine.appendChild(_$machineInfo);
+  }
+
+  const product = (product) => {
+    _render(product);
+    _state = 1;
+    _producedProduct = product;
+    factoryConsole.write('MACHINE ' + machineIndex + ' start PRIORITY ' + product.getPriority());
+    _worker.postMessage({priority: product.getPriority()});
+  }
+
+  const terminateProduction = () => {
+    _worker.terminate();
   }
 
   _init();
@@ -47,7 +51,7 @@ let Machine = function(machineIndex, machineDoneNotificator) {
     isBusy: () => !!_state,
     getProducedProduct: () => _producedProduct,
     product: product,
-    terminateProduction: _worker.terminate,
+    terminateProduction: terminateProduction,
     $getMachine: () => _$machine
   };
 }
